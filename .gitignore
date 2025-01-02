@@ -255,6 +255,7 @@ venv.bak/
 .idea
 idea/
 bills/
+data/bills
 
 # Spyder project settings
 .spyderproject

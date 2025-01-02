@@ -27,17 +27,21 @@ def check_if_valid_path(text: str) -> bool:
     else:
         return False
 
-def get_identifier(extracted_text: str, regx: str) -> str | None:
+def get_identifier(extracted_text: str, regx: str) -> str:
     """
     :param extracted_text: Text extracted from PDF file
     :param regx: regx pattern
     :return: A string that matches regex pattern.
     """
+    match = re.search(regx, extracted_text)
+    identifier: str = ""
     try:
-        pattern = re.search(regx, extracted_text)
-        identifier: str | None = pattern.group()
+        identifier = match.group(1)
+    except IndexError:
+        identifier = match.group()
     except AttributeError:
-        identifier = None
+        identifier = ""
+
     return identifier
 
 
@@ -52,7 +56,7 @@ def get_values(extracted_text: str) -> Bill:
     date_: str = r"BY:\s+\d{2}-[A-Za-z]{3}-\d{4}" # Bill read date
     read_type: str = r"Actual\b|Estimated"  # read type of bill actual vs estimated
     billing_period: str = r"(\d+)\s+Days" # r"(\d+)\s+Days\)"
-    energy_used: str = r"^\d+\.\d{2}$"  # kwh consumption
+    energy_used: str = r"ENERGY[\s\S]*?\n(?:.*\n){8}(\d{2,3}\.\d{2})" #"(?:\d+\.\d+\s+){2}(\d+\.\d+)"  # kwh consumption
     total_charges: str ="Total:.{10,}"
 
     bill: Bill = Bill(
@@ -61,7 +65,7 @@ def get_values(extracted_text: str) -> Bill:
         date_= get_identifier(extracted_text, date_).replace("BY: ","").strip(),
         read_type = get_identifier(extracted_text, read_type),
         billing_period = get_identifier(extracted_text, billing_period).replace("Days","").strip(),
-        energy_used = get_identifier(extracted_text, energy_used),
+        energy_used = get_identifier(extracted_text, energy_used) + "`",
         total_charges = get_identifier(extracted_text, total_charges).replace("Total: ",""),
     )
     return bill
@@ -75,7 +79,7 @@ def get_bills(directory: Path) -> list[Bill]:
     for file in tqdm(os.listdir(directory)):
         if file.endswith(".pdf"):
             extracted_text: str = extract_text(Path(directory) / file)
-            #print(extracted_text)
+            # print(extracted_text)
             bill: Bill = get_values(extracted_text)
             bills.append(bill)
     return bills

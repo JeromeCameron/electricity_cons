@@ -52,12 +52,12 @@ def get_values(extracted_text: str) -> Bill:
     """
     # RegX Patterns
     invoice_no: str = r"\d{10,}"  # Invoice number
-    service_address: str = r"SERVICE ADDRESS: .{10,}"  # service address for jps account
-    date_: str = r"BY:\s+\d{2}-[A-Za-z]{3}-\d{4}" # Bill read date
+    service_address: str = r"Service Name \/ Address:\n(?:.*\n)?(.*)"  # service address for jps account
+    date_: str = r"\b\d{2}-[A-Z]{3}-\d{4}\b" # Bill read date
     read_type: str = r"Actual\b|Estimated"  # read type of bill actual vs estimated
-    billing_period: str = r"(\d+)\s+Days" # r"(\d+)\s+Days\)"
-    energy_used: str = r"ENERGY[\s\S]*?\n(?:.*\n){8}(\d{2,3}\.\d{2})" #"(?:\d+\.\d+\s+){2}(\d+\.\d+)"  # kwh consumption
-    total_charges: str ="Total:.{10,}"
+    billing_period: str = r"No\. of Days\s+(\d+)" # Number of days
+    energy_used: str = r"TOTAL AMOUNT DUE\s+(\d{2,}\.\d+)" #"(?:\d+\.\d+\s+){2}(\d+\.\d+)"  # kwh consumption
+    total_charges: str =r"Current\s+Charges\s+\$([\d,]+\.\d{2})"
 
     bill: Bill = Bill(
         invoice_no = get_identifier(extracted_text, invoice_no) + "`",
@@ -79,6 +79,7 @@ def get_bills(directory: Path) -> list[Bill]:
     for file in tqdm(os.listdir(directory)):
         if file.endswith(".pdf"):
             extracted_text: str = extract_text(Path(directory) / file)
+            # print(extracted_text)
             bill: Bill = get_values(extracted_text)
             bills.append(bill)
     return bills
@@ -108,4 +109,4 @@ if __name__ == "__main__":
             valid_path = True
 
     bills_batch = main(path)
-    bills_batch.to_csv(os.getcwd() + "bills.csv", index=False)
+    bills_batch.to_csv(os.getcwd() + "_bills.csv", index=False)

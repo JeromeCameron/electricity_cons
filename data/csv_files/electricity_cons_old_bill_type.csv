@@ -10,8 +10,8 @@ Constant Spring Grove,28-01-18,Actual,30,85.00`,"2,697.90",,
 Constant Spring Grove,27-02-18,Actual,30,89.00`,"2,784.30",,
 Constant Spring Grove,30-03-18,Actual,30,92.00`,"3,124.15",,
 Constant Spring Grove,30-04-18,Actual,30,110.000`,"3,361.24",,
-Merrivale,08-05-18,Actual,7,10.00`,"2,211.14",,moving
-Constant Spring Grove,11-05-18,Actual,12,27.000`,-613.2,,moving
+Merrivale,08-05-18,Actual,7,10.00`,"2,211.14",moving,
+Constant Spring Grove,11-05-18,Actual,12,27.000`,0,moving,
 Merrivale,08-06-18,Actual,32,91.00`,"2,843.25",,
 Merrivale,09-07-18,Actual,30,120.00`,"4,281.53",,
 Merrivale,09-08-18,Actual,33,148.00`,"5,453.56",,

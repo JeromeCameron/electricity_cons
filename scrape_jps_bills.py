@@ -6,16 +6,16 @@ from tqdm import tqdm
 from pdfminer.high_level import extract_text
 
 
-
 def check_if_valid_path(text: str) -> bool:
     """
-    :param text: user input to check if path
+    :param text: user input to check if it is of path type.
     :return: A boolean
     """
     if os.path.isdir(text):
         return True
     else:
         return False
+
 
 def get_identifier(extracted_text: str, regx: str) -> str:
     """
@@ -34,6 +34,7 @@ def get_identifier(extracted_text: str, regx: str) -> str:
 
     return identifier
 
+
 def get_values(extracted_text: str, **kwargs) -> Bill:
     """
     :param extracted_text: Text extracted from PDF file
@@ -51,6 +52,7 @@ def get_values(extracted_text: str, **kwargs) -> Bill:
     )
     return bill
 
+
 def get_bills(directory: Path, regex_patterns: dict) -> list[Bill]:
     """
     :param directory: Folder containing invoices
@@ -64,6 +66,7 @@ def get_bills(directory: Path, regex_patterns: dict) -> list[Bill]:
             bill: Bill = get_values(extracted_text, **regex_patterns)
             bills.append(bill)
     return bills
+
 
 def main(directory: Path, regex_patterns: dict) -> pd.DataFrame:
     """
